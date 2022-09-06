@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Ricardo Assing (ricardo@tsiana.ca)
- * 
+ *
  * Some default configuration for the gateway.
  */
 use Omnipay\FirstAtlanticCommerce\Constants;
@@ -17,8 +17,8 @@ return [
 
     /*
      * These options can and should be overridden via the $gateway->set** methods.
-     * 
-     * @example 
+     *
+     * @example
      * $gateway->setTestMode = true;
      */
 
@@ -29,16 +29,16 @@ return [
 
     Constants::GATEWAY_ORDER_NUMBER_PREFIX => '', // Prefix for OrderNumber sent to FAC.
     Constants::GATEWAY_ORDER_NUMBER_AUTOGEN => true, // Set to true to have the gateway generate order numbers if none is supplied for a transaction.
-    
+
     /*
-     * Always the same. 
+     * Always the same.
      */
     Constants::CONFIG_KEY_FACAQID       => '464748', // First Atlantic Commerce Acquirer ID
 
     /**
      * List all authorized currencies.
      * First in list will be default and populated as 'currency' parameter
-     * 
+     *
      * Override currency with
      * $gateway->setCurrency = "XYZ";
      */

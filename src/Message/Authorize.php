@@ -16,6 +16,7 @@ class Authorize extends AbstractRequest
     const MESSAGE_PART_BILLING_DETAILS = "BillingDetails";
     const MESSAGE_PART_SHIPPING_DETAILS = "ShippingDetails";
     const MESSAGE_PART_3DS_DETAILS = "ThreeDSecureDetails";
+    const MESSAGE_PART_3DS_ADDITIONAL_INFO = "ThreeDSecureAdditionalInfo";
     const MESSAGE_PART_RECURRING_DETAILS = "RecurringDetails";
     const MESSAHE_PART_FRAUD_DETAILS = "FraudDetails";
 
@@ -29,6 +30,7 @@ class Authorize extends AbstractRequest
     const PARAM_CURRENCY_EXPONENT = 'CurrencyExponent';
     const PARAM_SIGNATURE_METHOD = 'SignatureMethod';
     const PARAM_IPADDRESS = 'IPAddress';
+    const PARAM_CUSTOM_DATA = 'CustomData';
     const PARAM_CUSTOMER_REF = 'CustomerReference';
 
     const PARAM_CARD_NUMBER = "CardNumber";
@@ -36,6 +38,13 @@ class Authorize extends AbstractRequest
     const PARAM_CARD_CVV2 = "CardCVV2";
     const PARAM_CARD_ISSUE_NUMBER = "IssueNumber";
     const PARAM_CARD_START_DATE = "StartDate";
+
+    const PARAM_THREE_D_SECURE_DETAILS_AUTHENTICATION_RESULT = "AuthenticationResult";
+    const PARAM_THREE_D_SECURE_DETAILS_ECI_INDICATOR = "ECIIndicator";
+    const PARAM_THREE_D_SECURE_DETAILS_TRANSACTION_STAIN = "TransactionStain";
+    const PARAM_THREE_D_SECURE_DETAILS_CAVV = "CAVV";
+    const PARAM_THREE_D_SECURE_ADDITIONAL_INFO_PROTOCOL_VERSION = "ProtocolVersion";
+    const PARAM_THREE_D_SECURE_ADDITIONAL_INFO_DS_TRANS_ID = "DSTransId";
 
     const PARAM_BILLING_FIRSTNAME = "BillToFirstName";
     const PARAM_BILLING_LASTNAME = "BillToLastName";
@@ -89,6 +98,8 @@ class Authorize extends AbstractRequest
         $this->TransactionDetails = array_merge($this->TransactionDetails, $this->setTransactionDetailsCommon());
         $this->setTransactionDetails();
         $this->setCardDetails();
+        $this->setThreeDSecureDetailsData();
+        $this->setThreeDSecureAdditionalInfo();
 
         if ($this->getTransactionCode()->hasCode(TransactionCode::AVS_CHECK))
         {
@@ -107,6 +118,7 @@ class Authorize extends AbstractRequest
         $this->TransactionDetails[self::PARAM_SIGNATURE_METHOD] = $this->getSignatureMethod();
         $this->TransactionDetails[self::PARAM_IPADDRESS] = $this->getIPAddress();
         $this->TransactionDetails[self::PARAM_CUSTOMER_REF] = $this->getCustomerReference();
+        $this->TransactionDetails[self::PARAM_CUSTOM_DATA] = $this->getCustomDataTax();
 
         $this->signTransaction();
         $this->TransactionDetails[self::PARAM_SIGNATURE] = $this->getSignature();
@@ -164,7 +176,8 @@ class Authorize extends AbstractRequest
         $CardDetails[self::PARAM_CARD_EXPIRY_DATE] = $CreditCard->getExpiryDate("my");
         $CardDetails[self::PARAM_CARD_CVV2] = $CreditCard->getCvv();
         $CardDetails[self::PARAM_CARD_ISSUE_NUMBER] = $CreditCard->getIssueNumber();
-        $CardDetails[self::PARAM_CARD_START_DATE] = $CreditCard->getStartDate("my");
+        $CardDetails[self::PARAM_CARD_START_DATE] = null;
+        //$CardDetails[self::PARAM_CARD_START_DATE] = $CreditCard->getStartDate("my");
 
         if ($CardDetails[self::PARAM_CARD_START_DATE] == "1299") unset($CardDetails[self::PARAM_CARD_START_DATE]);
 
@@ -249,5 +262,31 @@ class Authorize extends AbstractRequest
 
         $this->data[self::MESSAGE_PART_BILLING_DETAILS] = $BillingDetails;
     }
+
+    protected function setThreeDSecureDetailsData()
+    {
+        $ThreeDSecureDetails = [];
+        $ThreeDSecureDetailsData = $this->getThreeDSecureDetails();
+
+        $ThreeDSecureDetails[self::PARAM_THREE_D_SECURE_DETAILS_AUTHENTICATION_RESULT] = $ThreeDSecureDetailsData->getAuthenticationResult();
+        $ThreeDSecureDetails[self::PARAM_THREE_D_SECURE_DETAILS_ECI_INDICATOR] = $ThreeDSecureDetailsData->getECIIndicator();
+        $ThreeDSecureDetails[self::PARAM_THREE_D_SECURE_DETAILS_TRANSACTION_STAIN] = $ThreeDSecureDetailsData->getTransactionStain();
+        $ThreeDSecureDetails[self::PARAM_THREE_D_SECURE_DETAILS_CAVV] = $ThreeDSecureDetailsData->getCAVV();
+
+        $this->data[self::MESSAGE_PART_3DS_DETAILS] = $ThreeDSecureDetails;
+    }
+
+    protected function setThreeDSecureAdditionalInfo()
+    {
+        $ThreeDSecureAdditionalInfo = [];
+        $ThreeDSecureDetailsData = $this->getThreeDSecureDetails();
+
+        $ThreeDSecureAdditionalInfo[self::PARAM_THREE_D_SECURE_ADDITIONAL_INFO_PROTOCOL_VERSION] = $ThreeDSecureDetailsData->getProtocolVersion();
+        $ThreeDSecureAdditionalInfo[self::PARAM_THREE_D_SECURE_ADDITIONAL_INFO_DS_TRANS_ID] = $ThreeDSecureDetailsData->getDSTransId();
+
+        $this->data[self::MESSAGE_PART_3DS_ADDITIONAL_INFO] = $ThreeDSecureAdditionalInfo;
+    }
+
+
 
 }

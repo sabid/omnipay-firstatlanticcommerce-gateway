@@ -6,6 +6,7 @@
 namespace Omnipay\FirstAtlanticCommerce\Message;
 
 use Omnipay\FirstAtlanticCommerce\Constants;
+use Omnipay\FirstAtlanticCommerce\Support\ThreeDSecure;
 use Omnipay\FirstAtlanticCommerce\Support\TransactionCode;
 use Omnipay\FirstAtlanticCommerce\Exception\GatewayHTTPException;
 
@@ -75,6 +76,8 @@ implements \Omnipay\FirstAtlanticCommerce\Support\FACParametersInterface
     {
         $this->createNewXMLDoc($data);
 
+        //dd($this->XMLDoc->asXML());
+
         $httpResponse = $this->httpClient
             ->request("POST", $this->getEndpoint().$this->getMessageClassName(), [
             "Content-Type"=>"text/html"
@@ -99,6 +102,9 @@ implements \Omnipay\FirstAtlanticCommerce\Support\FACParametersInterface
         {
             case "200":
                 $responseContent = $httpResponse->getBody()->getContents();
+
+                //dd($responseContent);
+
                 $responseClassName = __NAMESPACE__."\\".$this->FACServices[$this->getMessageClassName()]["response"];
 
                 $responseXML = new \SimpleXMLElement($responseContent);
@@ -357,5 +363,29 @@ implements \Omnipay\FirstAtlanticCommerce\Support\FACParametersInterface
     public function getOrderNumberAutoGen()
     {
         return $this->getParameter(Constants::GATEWAY_ORDER_NUMBER_AUTOGEN);
+    }
+
+    public function setThreeDSecureDetails($threeDSecureDetails)
+    {
+        $threeDSecureDetails = new ThreeDSecure($threeDSecureDetails);
+
+        return $this->setParameter('ThreeDSecureDetails', $threeDSecureDetails);
+    }
+
+    public function getThreeDSecureDetails()
+    {
+        return $this->getParameter('ThreeDSecureDetails');
+    }
+
+    public function setCustomDataTax($customDataTax)
+    {
+        //$threeDSecureDetails = new ThreeDSecure($threeDSecureDetails);
+
+        return $this->setParameter('CustomDataTax', '|TX' . $customDataTax);
+    }
+
+    public function getCustomDataTax()
+    {
+        return $this->getParameter('CustomDataTax');
     }
 }
