@@ -173,7 +173,7 @@ class Authorize extends AbstractRequest
         $CreditCard->validate();
 
         $CardDetails[self::PARAM_CARD_NUMBER] = $CreditCard->getNumber();
-        $CardDetails[self::PARAM_CARD_EXPIRY_DATE] = $CreditCard->getExpiryDate("my"); // my
+        $CardDetails[self::PARAM_CARD_EXPIRY_DATE] = $CreditCard->getExpiryDate("ym"); //getExpiryDate("my") this is default
         $CardDetails[self::PARAM_CARD_CVV2] = $CreditCard->getCvv();
         $CardDetails[self::PARAM_CARD_ISSUE_NUMBER] = $CreditCard->getIssueNumber();
         //$CardDetails[self::PARAM_CARD_START_DATE] = null;
