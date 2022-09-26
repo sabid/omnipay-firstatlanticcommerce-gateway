@@ -179,7 +179,7 @@ class Authorize extends AbstractRequest
         //$CardDetails[self::PARAM_CARD_START_DATE] = null;
         //$CardDetails[self::PARAM_CARD_START_DATE] = $CreditCard->getStartDate("my"); // my
 
-        if ($CardDetails[self::PARAM_CARD_START_DATE] == "1299") unset($CardDetails[self::PARAM_CARD_START_DATE]);
+        //if ($CardDetails[self::PARAM_CARD_START_DATE] == "1299") unset($CardDetails[self::PARAM_CARD_START_DATE]);
 
         foreach ($this->CardDetailsRequirement as $param => $requirement)
         {
