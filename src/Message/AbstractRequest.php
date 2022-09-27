@@ -5,7 +5,6 @@
 
 namespace Omnipay\FirstAtlanticCommerce\Message;
 
-use Illuminate\Support\Facades\Log;
 use Omnipay\FirstAtlanticCommerce\Constants;
 use Omnipay\FirstAtlanticCommerce\Support\ThreeDSecure;
 use Omnipay\FirstAtlanticCommerce\Support\TransactionCode;
@@ -77,10 +76,6 @@ implements \Omnipay\FirstAtlanticCommerce\Support\FACParametersInterface
     {
         $this->createNewXMLDoc($data);
 
-        Log::debug('Fac Sentry PGServiceXML/Authorize Third step: XMLDoc->asXML()', ['xml' => $this->XMLDoc->asXML()] );
-
-        //dd($this->XMLDoc->asXML());
-
         $httpResponse = $this->httpClient
             ->request("POST", $this->getEndpoint().$this->getMessageClassName(), [
             "Content-Type"=>"text/html"
@@ -105,8 +100,6 @@ implements \Omnipay\FirstAtlanticCommerce\Support\FACParametersInterface
         {
             case "200":
                 $responseContent = $httpResponse->getBody()->getContents();
-
-                //dd($responseContent);
 
                 $responseClassName = __NAMESPACE__."\\".$this->FACServices[$this->getMessageClassName()]["response"];
 
