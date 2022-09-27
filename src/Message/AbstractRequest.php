@@ -5,6 +5,7 @@
 
 namespace Omnipay\FirstAtlanticCommerce\Message;
 
+use Illuminate\Support\Facades\Log;
 use Omnipay\FirstAtlanticCommerce\Constants;
 use Omnipay\FirstAtlanticCommerce\Support\ThreeDSecure;
 use Omnipay\FirstAtlanticCommerce\Support\TransactionCode;
@@ -75,6 +76,8 @@ implements \Omnipay\FirstAtlanticCommerce\Support\FACParametersInterface
     public function sendData($data)
     {
         $this->createNewXMLDoc($data);
+
+        Log::debug("Fac Sentry PGServiceXML/Authorize Third step: XMLDoc->asXML($data) ",  [$this->XMLDoc->asXML()] );
 
         //dd($this->XMLDoc->asXML());
 
