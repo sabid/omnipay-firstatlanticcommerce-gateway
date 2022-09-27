@@ -77,7 +77,7 @@ implements \Omnipay\FirstAtlanticCommerce\Support\FACParametersInterface
     {
         $this->createNewXMLDoc($data);
 
-        Log::debug("Fac Sentry PGServiceXML/Authorize Third step: XMLDoc->asXML($data) ",  [$this->XMLDoc->asXML()] );
+        Log::debug('Fac Sentry PGServiceXML/Authorize Third step: XMLDoc->asXML()',  $this->XMLDoc->asXML());
 
         //dd($this->XMLDoc->asXML());
 
